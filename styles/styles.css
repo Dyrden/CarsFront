@@ -1,0 +1,101 @@
+
+h2, h3 {
+    background-color: rgb(98, 104, 220);
+    border-radius: 15px;
+    padding: 8px;
+
+}
+
+button {
+    padding-left: 4;
+    padding-right: 4;
+}
+
+table.cars-display {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(184, 222, 255);
+    height : 400px;
+    width: 600px;
+    
+}
+table.cars-display thead, tbody, td, th {
+    display: block;
+}
+
+table.cars-display thead {
+    background-color: rgb(73, 142, 202);
+    position: relative;
+}
+
+table.cars-display th {
+    position: sticky;
+    top: 0;
+    padding-right: 0;
+    
+}
+
+table.cars-display tbody {
+    overflow-y: scroll;
+}
+
+table.cars-display td, th {
+    width: 25%;
+}
+
+
+table.cars-display tr {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+
+table.cars-display tbody tr:hover {
+    background-color: rgb(76, 165, 237);
+}
+
+
+
+
+.create-car {
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.car-line {
+    display: flex;
+    justify-content:flex-end ;
+}
+
+
+
+.car-info-to-edit {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-top: 20px;
+    padding-bottom: 5px;
+}
+
+.car-info-to-edit div {
+    display: flex;
+    justify-content: flex-end;
+    background-color: white;
+}
+
+
+.find-car-info {
+    display: flex;
+    flex-direction: column;
+    padding-top: 25px;
+}
+
+.find-car-info div {
+    display: flex;
+    justify-content: space-between;
+}
+
+.find-car-info label, p {
+    margin: 0;
+}
