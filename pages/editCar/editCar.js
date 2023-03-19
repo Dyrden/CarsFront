@@ -1,8 +1,11 @@
-import { getURL } from "../../settings.js";
+import { URL } from "../../settings.js";
+import { handleHttpErrors } from "../../utils.js";
+import { setResponseText } from "../../index.js";
 
 export function initEditCar(match) {
   document.getElementById("btn-find-car-to-edit").onclick = fetchCarData;
   document.getElementById("btn-submit-edited-car").onclick = editCarData;
+  document.getElementById("submitted").innerText = ""
   if (match?.params?.id) {
     try {
       const id = match?.params?.id;
@@ -51,21 +54,48 @@ async function editCarData() {
       body: JSON.stringify(car),
     };
 
+    const token = localStorage.getItem("token")
+    if (!token) {
+      setResponseText("You must login to use this feature", false)
+      return
+    }
+    options.headers.Authorization = "Bearer " + token
+    
+
     const id = document.getElementById("text-for-id").value;
-    const data = await fetch(getURL() + "/" + id, options).then((res) =>
-    res.json()
-    );
+    const data = await fetch(URL + "/" + id, options).then(handleHttpErrors);
 
+    if (data) {
+      document.getElementById("submitted").innerText = "Submitted!"
 
-    document.getElementById("text-for-id").value = "";
+    }
+
   } catch (err) {
-    document.getElementById("error").innerText = err;
+      if (err.apiError) {
+        setResponseText(err.apiError.message, false)
+    } else {
+        setResponseText(err.message, false)
+    }
+
   }
 }
 
 async function renderCar(id) {
   try {
-    const car = await fetch(getURL() + "/" + id).then((res) => res.json());
+    const options = {
+      method : "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }
+    const token = localStorage.getItem("token")
+    if (!token) {
+      setResponseText("You must login to use this feature", false)
+      return
+    }
+    options.headers.Authorization = "Bearer " + token
+
+    const car = await fetch(URL + "/" + id, options).then(handleHttpErrors);
 
     if (!Object.keys(car).includes("id")) {
       throw new Error("No car found for id:" + id);
@@ -75,7 +105,12 @@ async function renderCar(id) {
     document.getElementById("text-for-brand").value = car.brand;
     document.getElementById("text-for-price-per-day").value = car.pricePerDay;
     document.getElementById("text-for-best-discount").value = car.bestDiscount;
-  } catch (err) {
-    document.getElementById("error").innerText = err;
+  }  catch (err) {
+    if (err.apiError) {
+      setResponseText(err.apiError.message, false)
+  } else {
+      setResponseText(err.message, false)
   }
+
+}
 }

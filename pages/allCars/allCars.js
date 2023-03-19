@@ -1,5 +1,6 @@
-import {getURL} from "../../settings.js"
-import { sanitizeStringWithTableRows } from "../../utils.js"
+import {URL} from "../../settings.js"
+import { handleHttpErrors, sanitizeStringWithTableRows } from "../../utils.js"
+import {setResponseText} from "../../index.js"
 
 let carsData
 
@@ -15,14 +16,20 @@ export function initAllCars() {
 async function getCars() {
 
     const options = {
-        method: "GET"
+        method: "GET",
+        headers: { "Accept": "application/json" }
     }
     try {
-        const cars = await fetch(getURL(),options).then(res => res.json())
+        const cars = await fetch(URL,options).then(handleHttpErrors)
         carsData = cars
         showData(cars)        
-    } catch (error) {
-
+    } catch (err) {
+        if (err.apiError) {
+            setResponseText(err.apiError.message, false)
+        } else {
+            setResponseText(err.message, false)
+        }
+    
     }
 }
 

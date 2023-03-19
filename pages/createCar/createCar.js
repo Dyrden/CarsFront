@@ -1,4 +1,6 @@
-import {getURL} from "../../settings.js"
+import {URL} from "../../settings.js"
+import {setResponseText} from "../../index.js"
+import { handleHttpErrors } from "../../utils.js"
 
 
 export function initCreateCar(){
@@ -28,8 +30,15 @@ function getCarDetails() {
         body: JSON.stringify(car),
     }
     try {
-        const res = await fetch(getURL(),options)
-        const data = await res.json()
+        const token = localStorage.getItem("token")
+        if (!token) {
+            setResponseText("You must login to use this feature", false)
+            return
+        }
+        options.headers.Authorization = "Bearer " + token
+        
+
+        const data = await fetch(URL,options).then(handleHttpErrors)
         document.getElementById("added-model").innerHTML = "Model: " + 
         "<span>"+ data?.model +"</span>"
         document.getElementById("added-brand").innerHTML = "Brand: " +
@@ -38,12 +47,14 @@ function getCarDetails() {
         "<span>"+ data?.pricePerDay +"</span>"
         document.getElementById("added-best-discount").innerHTML = "Best discount: " +
         "<span>"+ data?.bestDiscount +"</span>"
-    } catch (error) {
-        console.log("ups")
-        
-    }
-
-
+    } catch (err) {
+        if (err.apiError) {
+            setResponseText(err.apiError.message, false)
+        } else {
+            setResponseText(err.message, false)
+        }
+    
+      }
   }
 
 

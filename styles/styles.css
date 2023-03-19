@@ -99,3 +99,14 @@ table.cars-display tbody tr:hover {
 .find-car-info label, p {
     margin: 0;
 }
+
+.login-bar {
+    background-color: rgb(72, 72, 167);
+    padding: 7px;
+}
+.login-bar ul li {
+    list-style-type: none;
+}
+.login-bar ul {
+    margin: 0;
+}
